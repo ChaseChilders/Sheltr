@@ -1,0 +1,13 @@
+.content-container {
+  height: 600px;
+  width: 80%;
+  border: solid 1px black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#map {
+  height: 100%;
+  width: 50%;
+}

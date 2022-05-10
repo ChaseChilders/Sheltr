@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheltr</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="logo">
+      <h1>Sheltr</h1>
+      <p>Find a Place to Stay</p>
+    </div>
+    <div class="dropdown">
+      <select id="cities" name="cities">
+        <option value="" selected disabled>Choose a City</option>
+        <option value="baltimore">Baltimore</option>
+        <option value="district-of-columbia">District of Columbia</option>
+        <option value="los-angeles">Los Angeles</option>
+      </select>
+    </div>
+    <div class="content-container">
+      <div id="map">
+        <h1 class="map-heading">Map</h1>
+      </div>
+      <div class="shelter-data">
+        <h1 class="data-heading">Data</h1>
+      </div>
+    </div>
+  </div>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDamVoPm9KUx7vsG6cs_HMTr5GsmTKjXVA&callback=initMap">
+    </script>
+</body>
+
+</html>
