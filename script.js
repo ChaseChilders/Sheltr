@@ -1,3 +1,4 @@
+// MAP CENTER FUNCTION:
 const cities = document.querySelector("#cities");
 
 cities.addEventListener("change", () => {
@@ -36,76 +37,43 @@ function centerMap(locations) {
   //now fit the map to the newly inclusive bounds
   map.fitBounds(bounds);
 }
+
+// EVENT LISTENERS FOR DATA CARDS:
 const selectCity = document.querySelector(".cities");
-
+const urls = {
+  "district-of-columbia" : "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Public_Service_WebMercator/MapServer/25/query?where=1%3D1&outFields=PROVIDER,ADDRESS,CITY,STATE,LATITUDE,LONGITUDE,TYPE,SUBTYPE,STATUS,NUMBER_OF_BEDS,DGS_CONFIRMED,DHS_CONFIRMED,LAST_UPDATED_BY_DHS,AGES_SERVED,HOW_TO_ACCESS,XCOORD,YCOORD,NAME,ZIPCODE,WEB_URL&outSR=4326&f=json", 
+  "los-angeles" : "https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/158/query?where=1%3D1&outFields=*&outSR=4326&f=json",
+  "baltimore" : "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
+}
 selectCity.addEventListener("change", (e) => {
-  if (e.target.value == "district-of-columbia") {
     document.querySelector(".shelter-list").innerHTML = " ";
-    fetch(
-      "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Public_Service_WebMercator/MapServer/25/query?where=1%3D1&outFields=PROVIDER,ADDRESS,CITY,STATE,LATITUDE,LONGITUDE,TYPE,SUBTYPE,STATUS,NUMBER_OF_BEDS,DGS_CONFIRMED,DHS_CONFIRMED,LAST_UPDATED_BY_DHS,AGES_SERVED,HOW_TO_ACCESS,XCOORD,YCOORD,NAME,ZIPCODE,WEB_URL&outSR=4326&f=json"
-    )
+    fetch(urls[e.target.value])
       .then((res) => res.json())
       .then((data) => {
-        const dcInfo = data.features;
-        for (let i of dcInfo) {
-          const list = document.querySelector(".shelter-list");
-          const name = i.attributes.NAME;
-          const prov = i.attributes.PROVIDER;
-          const location = `${i.attributes.ADDRESS}, ${i.attributes.CITY}, ${i.attributes.STATE}, ${i.attributes.ZIPCODE}`;
-          const status = i.attributes.STATUS;
-          const url = i.attributes.WEB_URL;
-          const type = i.attributes.TYPE;
-          const age = i.attributes.AGES_SERVED;
-          const sex = i.attributes.SUBTYPE;
-          const access = i.attributes.HOW_TO_ACCESS;
-          const lat = i.attributes.LATITUDE;
-          const long = i.attributes.LONGITUDE;
-          html = `
-        <div class="name" style="font-size: 20px">${name}</div>
-        <div class="provider" style="font-size: 18px">${prov}</div>
-        <div class="address" style="font-size: 14px">${location}</div>
-        <div class="access" style="font-size: 14px">${access}</div>
-        <div class="other" style="font-size: 12px">${age} · ${sex} · ${type} · ${status} · <a href="${url}">Website</a></div>
-        `;
-          let list2 = document.createElement("div");
-          list2.classList.add("list-item");
-          list2.innerHTML = html;
-          list.append(list2);
+        let locations = []
+        if( e.target.value == "district-of-columbia"){
+          locations = transformDcData(data.features)
+        } else if (e.target.value == "los-angeles"){
+          locations = transformLaData(data.features)
         }
+        let markers = []
+        for(let location of locations){
+          if (!location.location.lat) {
+            continue
+          }
+          const locationDiv = renderLocation(location)
+          const marker = renderPin(location) 
+          markers.push(location.location)
+          marker.addListener('click', (e) =>{
+            console.log(location)
+            locationDiv.classList.add("bg-secondary")
+            locationDiv.scrollIntoView({behavior:"smooth"})
+          })
+        }
+        centerMap(markers)
       });
-  }
 });
 
-selectCity.addEventListener("change", (e) => {
-  if (e.target.value == "los-angeles") {
-    document.querySelector(".shelter-list").innerHTML = " ";
-    fetch(
-      "https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/LMS_Data_Public/MapServer/158/query?where=1%3D1&outFields=*&outSR=4326&f=json"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const laInfo = data.features;
-        for (let i of laInfo) {
-          const list = document.querySelector(".shelter-list");
-          const name = i.attributes.Name;
-          const location = `${i.attributes.addrln1}, ${i.attributes.city}, ${i.attributes.state}, ${i.attributes.zip}`;
-          const phone = i.attributes.phones;
-          const hours = i.attributes.hours;
-          const description = i.attributes.description;
-          const url = i.attributes.url;
-          html = `
-        <div class="name" style="font-size: 20px">${name}</div>
-        <div class="address" style="font-size: 18px">${location}</div>
-        <div class="hours" style="font-size: 14px">${hours}</div>
-        `;
-          let laList = document.createElement("div");
-          laList.classList.add("list-item");
-          laList.innerHTML = html;
-          list.append(laList);
-        }
-      });
-  }
-});
 
 selectCity.addEventListener("change", (e) => {
   if (e.target.value == "baltimore") {
@@ -135,3 +103,74 @@ selectCity.addEventListener("change", (e) => {
       });
   }
 });
+
+function transformLaData(results){
+  return results.map((result) => {
+    return {
+      id : result.attributes.OBJECTID,
+      name : result.attributes.Name,
+      prov: "",
+      address: `${result.attributes.addrln1}, ${result.attributes.city}, ${result.attributes.state}, ${result.attributes.zip}`,
+      attributes: `${result.attributes.hours}`, 
+      hours: result.attributes.hours,
+      status: "",
+      url: result.attributes.url,
+      type: "",
+      age: "",
+      sex: "",
+      description: result.attributes.description,
+      access: "",
+      location: {
+        lat: result.attributes.latitude,
+        lng: result.attributes.longitude
+      }
+
+    }
+  })
+}
+
+function transformDcData(results){
+  return results.map((result) => {
+    return {
+      name : result.attributes.NAME,
+      prov: result.attributes.PROVIDER,
+      address: `${result.attributes.ADDRESS}, ${result.attributes.CITY}, ${result.attributes.STATE}, ${result.attributes.ZIPCODE}`,
+      attributes: `${result.attributes.AGES_SERVED} · ${location.sex} · ${location.type} · ${location.status}`,
+      status: result.attributes.STATUS,
+      url: result.attributes.WEB_URL,
+      type: result.attributes.TYPE,
+      age: result.attributes.AGES_SERVED,
+      sex: result.attributes.SUBTYPE,
+      access: result.attributes.HOW_TO_ACCESS,
+      location: {
+        lat: result.geometry.y,
+        lng: result.geometry.x
+      }
+
+    }
+  })
+}
+
+function renderLocation(location){
+  const html = `
+  <div class="name" style="font-size: 20px">${location.name}</div>
+  <div class="provider" style="font-size: 18px">${location.prov}</div>
+  <div class="address" style="font-size: 14px">${location.address}</div>
+  <div class="access" style="font-size: 14px">${location.access}</div>
+  <div class="other" style="font-size: 12px">${location.attributes}<a href="${location.url}">Website</a></div>
+  `;
+  // <div class="other" style="font-size: 12px">${location.age} · ${location.sex} · ${location.type} · ${location.status} · <a href="${location.url}">Website</a></div>
+  const list = document.querySelector(".shelter-list");
+    let list2 = document.createElement("div");
+    list2.classList.add("list-item");
+    list2.innerHTML = html;
+    list.append(list2);
+    return list2
+}
+
+function renderPin(location){
+  return new google.maps.Marker({
+    position : location.location,
+    map : map
+  })
+}
