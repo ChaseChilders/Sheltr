@@ -8,7 +8,7 @@
   <title>Sheltr</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <script  src="script.js" defer></script>
 </head>
 
 <body>
@@ -18,10 +18,10 @@
       <p>Find a Place to Stay</p>
     </div>
     <div class="dropdown">
-      <select id="cities" name="cities">
+      <select id="cities" name="cities" class="cities">
         <option value="" selected disabled>Choose a City</option>
         <option value="baltimore">Baltimore</option>
-        <option value="district-of-columbia">District of Columbia</option>
+        <option value="district-of-columbia" class="district-of-columbia">District of Columbia</option>
         <option value="los-angeles">Los Angeles</option>
       </select>
     </div>
@@ -30,13 +30,15 @@
         <h1 class="map-heading">Map</h1>
       </div>
       <div class="shelter-data">
-        <h1 class="data-heading">Data</h1>
+        <!-- <h1 class="data-heading">Data</h1> -->
+        <div class="shelter-list"></div>
       </div>
     </div>
   </div>
-  <script async
+  <script defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDamVoPm9KUx7vsG6cs_HMTr5GsmTKjXVA&callback=initMap">
     </script>
+
 </body>
 
 </html>
