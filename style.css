@@ -4,10 +4,31 @@
   border: solid 1px black;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 #map {
   height: 100%;
-  width: 50%;
+  width: 60%;
+}
+
+.shelter-data {
+  display: flex;
+  width: 40%;
+  /* align-items: center; */
+  overflow: auto;
+  justify-content: center;
+}
+
+.shelter-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 5%;
+  flex-wrap: wrap;
 }
