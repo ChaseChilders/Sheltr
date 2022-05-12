@@ -55,6 +55,8 @@ selectCity.addEventListener("change", (e) => {
           locations = transformDcData(data.features)
         } else if (e.target.value == "los-angeles"){
           locations = transformLaData(data.features)
+        } else if (e.target.value == "baltimore"){
+          locations = transformBaData(data.features)
         }
         let markers = []
         for(let location of locations){
@@ -75,34 +77,35 @@ selectCity.addEventListener("change", (e) => {
 });
 
 
-selectCity.addEventListener("change", (e) => {
-  if (e.target.value == "baltimore") {
-    document.querySelector(".shelter-list").innerHTML = " ";
-    fetch(
-      "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const btInfo = data.features;
-        for (let i of btInfo) {
-          const list = document.querySelector(".shelter-list");
-          const name = i.attributes.name;
-          const location = `${i.attributes.address}, ${i.attributes.city}, ${i.attributes.state}, ${i.attributes.zipcode}`;
-          const type = i.attributes.subtype;
-          const sex = i.attributes.pop_type;
-          html = `
-        <div class="name" style="font-size: 20px">${name}</div>
-        <div class="address" style="font-size: 14px">${location}</div>
-        <div class="other" style="font-size: 12px">${sex} · ${type}</div>
-        `;
-          let list2 = document.createElement("div");
-          list2.classList.add("list-item");
-          list2.innerHTML = html;
-          list.append(list2);
-        }
-      });
-  }
-});
+// selectCity.addEventListener("change", (e) => {
+//   if (e.target.value == "baltimore") {
+//     document.querySelector(".shelter-list").innerHTML = " ";
+//     fetch(
+//       "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
+//     )
+//       .then((res) => res.json())
+//       .then((data) => {
+//         console.log(data)
+//         const btInfo = data.features;
+//         for (let i of btInfo) {
+//           const list = document.querySelector(".shelter-list");
+//           const name = i.attributes.name;
+//           const location = `${i.attributes.address}, ${i.attributes.city}, ${i.attributes.state}, ${i.attributes.zipcode}`;
+//           const type = i.attributes.subtype;
+//           const sex = i.attributes.pop_type;
+//           html = `
+//         <div class="name" style="font-size: 20px">${name}</div>
+//         <div class="address" style="font-size: 14px">${location}</div>
+//         <div class="other" style="font-size: 12px">${sex} · ${type}</div>
+//         `;
+//           let list2 = document.createElement("div");
+//           list2.classList.add("list-item");
+//           list2.innerHTML = html;
+//           list.append(list2);
+//         }
+//       });
+//   }
+// });
 
 function transformLaData(results){
   return results.map((result) => {
@@ -145,6 +148,28 @@ function transformDcData(results){
       location: {
         lat: result.geometry.y,
         lng: result.geometry.x
+      }
+
+    }
+  })
+}
+
+function transformBaData(results){
+  return results.map((result) => {
+    return {
+      name : result.attributes.name,
+      prov: "",
+      address: `${result.attributes.address}, ${result.attributes.city}, ${result.attributes.state}, ${result.attributes.zipcode}`,
+      attributes: "",
+      status: "",
+      url: "",
+      type: result.attributes.subtype,
+      age:"",
+      sex: "",
+      access: "",
+      location: {
+        lat: result.geometry?.y,
+        lng: result.geometry?.x
       }
 
     }
