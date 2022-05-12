@@ -17,6 +17,8 @@ body {
 .tagline {
   margin-top: 20px;
   font-style: italic;
+  font-family: "Quicksand", sans-serif;
+  font-size: 25px;
 }
 .logo {
   text-align: center;
@@ -52,20 +54,14 @@ body {
 }
 
 .outer-shelter-data {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+  width: 50%;
   background-color: rgba(255, 255, 255, 0.913);
   border-radius: 25px;
   overflow: hidden;
   margin-left: 20px;
 }
 .shelter-data {
-  display: flex;
   width: 100%;
-  align-items: center;
-  justify-content: center;
   background-color: rgba(255, 255, 255, 0.913);
   border-radius: 25px;
   overflow: auto;
@@ -80,12 +76,14 @@ body {
 .list-item {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   margin: 5%;
   flex-wrap: wrap;
+  font-family: "Quicksand", sans-serif;
 }
 
 .dropdown {
   text-align: center;
   padding-bottom: 40px;
+  font-family: "Quicksand", sans-serif;
 }
