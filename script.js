@@ -36,17 +36,77 @@ const urls = {
   baltimore:
     "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json",
 };
+
+const cityCenters = {
+  baltimore: {
+    lat: 39.299236,
+    lng: -76.609383,
+  },
+  dc: {
+    lat: 38.9072,
+    lng: -77.0369,
+  },
+  la: {
+    lat: 34.0522,
+    lng: -118.2437,
+  }
+}
+
+//https://cloud.google.com/blog/products/maps-platform/how-calculate-distances-map-maps-javascript-api
+
+function getDistance(pos1, pos2) {
+  const meters = google.maps.geometry.spherical.computeDistanceBetween(pos1, pos2)
+  const miles = meters / 1609.344
+  console.log(miles)
+  return miles
+
+}
+
 selectCity.addEventListener("change", (e) => {
+  let selection = e.target.value
+  if (selection == "current") {
+    const successCallback = (position) => {
+      let userLat = position.coords.latitude
+      let userLng = position.coords.longitude
+      let userLocation = {
+        location : {
+        lat : userLat,
+        lng: userLng,
+        }
+      }
+      if (getDistance(userLocation.location, cityCenters.baltimore) < 25) {
+        updateLocations("baltimore")
+      } else if (getDistance(userLocation.location, cityCenters.la) < 25) {
+        updateLocations("los-angeles")
+      } else if (getDistance(userLocation.location, cityCenters.dc) < 25) {
+        updateLocations("district-of-columbia")
+      } else {
+        map.setCenter(userLocation.location)
+        map.setZoom(7)
+        alert('Sorry, no shelters in your area.')
+      }
+      renderPin(userLocation)
+    }
+
+    const errorCallback = (error) => {
+      console.log(error)
+    }
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    return
+  }
+  updateLocations(selection)
+})
+function updateLocations (selection) {
   document.querySelector(".shelter-list").innerHTML = " ";
-  fetch(urls[e.target.value])
+  fetch(urls[selection])
     .then((res) => res.json())
     .then((data) => {
       let locations = [];
-      if (e.target.value == "district-of-columbia") {
+      if (selection == "district-of-columbia") {
         locations = transformDcData(data.features);
-      } else if (e.target.value == "los-angeles") {
+      } else if (selection == "los-angeles") {
         locations = transformLaData(data.features);
-      } else if (e.target.value == "baltimore") {
+      } else if (selection == "baltimore") {
         locations = transformBaData(data.features);
       }
       let markers = [];
@@ -69,7 +129,8 @@ selectCity.addEventListener("change", (e) => {
       }
       centerMap(markers);
     });
-});
+};
+
 
 // selectCity.addEventListener("change", (e) => {
 //   if (e.target.value == "baltimore") {
