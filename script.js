@@ -116,15 +116,17 @@ function transformLaData(results) {
       id: result.attributes.OBJECTID,
       name: result.attributes.Name,
       prov: "",
-      address: `${result.attributes.addrln1}, ${result.attributes.city}, ${result.attributes.state}, ${result.attributes.zip}`,
-      attributes: `${result.attributes.hours}`,
-      hours: result.attributes.hours,
+      address: `${result.attributes.addrln1}, ${result.attributes.city}, ${
+        result.attributes.state
+      }, ${result.attributes.zip ?? ""}`,
+      attributes: `${result.attributes.hours ?? ""}`,
+      hours: result.attributes.hours ?? "",
       status: "",
-      url: result.attributes.url,
+      url: result.attributes.url ?? "",
       type: "",
       age: "",
       sex: "",
-      description: result.attributes.description,
+      description: result.attributes.description ?? "",
       access: "",
       location: {
         lat: result.attributes.latitude,
