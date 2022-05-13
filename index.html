@@ -154,6 +154,7 @@
     <div class="dropdown">
       <select id="cities" name="cities" class="cities">
         <option value="" selected disabled>Choose a City</option>
+        <option value="current">Use Your Current Location</option>
         <option value="baltimore">Baltimore</option>
         <option value="district-of-columbia" class="district-of-columbia">District of Columbia</option>
         <option value="los-angeles">Los Angeles</option>
@@ -173,7 +174,7 @@
     </div>
   </div>
   <script defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDamVoPm9KUx7vsG6cs_HMTr5GsmTKjXVA&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDamVoPm9KUx7vsG6cs_HMTr5GsmTKjXVA&libraries=geometry&callback=initMap">
     </script>
 
 </body>
