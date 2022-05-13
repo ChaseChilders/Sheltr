@@ -190,3 +190,8 @@ function renderPin(location) {
     map: map,
   });
 }
+
+
+
+
+
