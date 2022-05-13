@@ -71,36 +71,6 @@ selectCity.addEventListener("change", (e) => {
     });
 });
 
-// selectCity.addEventListener("change", (e) => {
-//   if (e.target.value == "baltimore") {
-//     document.querySelector(".shelter-list").innerHTML = " ";
-//     fetch(
-//       "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
-//     )
-//       .then((res) => res.json())
-//       .then((data) => {
-//         console.log(data)
-//         const btInfo = data.features;
-//         for (let i of btInfo) {
-//           const list = document.querySelector(".shelter-list");
-//           const name = i.attributes.name;
-//           const location = `${i.attributes.address}, ${i.attributes.city}, ${i.attributes.state}, ${i.attributes.zipcode}`;
-//           const type = i.attributes.subtype;
-//           const sex = i.attributes.pop_type;
-//           html = `
-//         <div class="name" style="font-size: 20px">${name}</div>
-//         <div class="address" style="font-size: 14px">${location}</div>
-//         <div class="other" style="font-size: 12px">${sex} · ${type}</div>
-//         `;
-//           let list2 = document.createElement("div");
-//           list2.classList.add("list-item");
-//           list2.innerHTML = html;
-//           list.append(list2);
-//         }
-//       });
-//   }
-// });
-
 function transformLaData(results) {
   return results.map((result) => {
     return {
@@ -108,14 +78,14 @@ function transformLaData(results) {
       name: result.attributes.Name,
       prov: "",
       address: `${result.attributes.addrln1}, ${result.attributes.city}, ${result.attributes.state}, ${result.attributes.zip}`,
-      attributes: `${result.attributes.hours}`,
-      hours: result.attributes.hours,
+      attributes: `${result.attributes.hours ?? ""}`,
+      hours: result.attributes.hours ?? "",
       status: "",
-      url: result.attributes.url,
+      url: result.attributes.url ?? "",
       type: "",
       age: "",
       sex: "",
-      description: result.attributes.description,
+      description: result.attributes.description ?? "",
       access: "",
       location: {
         lat: result.attributes.latitude,
