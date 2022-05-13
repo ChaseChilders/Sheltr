@@ -57,6 +57,15 @@ selectCity.addEventListener("change", (e) => {
         const marker = renderPin(location);
         markers.push(location.location);
         marker.addListener("click", (e) => {
+          const highlightedData = document.querySelectorAll(".list-item");
+          for (let i of highlightedData) {
+            i.classList.remove("bg-danger");
+            i.classList.remove("text-dark");
+            i.classList.remove("bg-opacity-25");
+            i.classList.remove("p-3");
+            i.classList.remove("rounded");
+            i.classList.remove("shadow-lg");
+          }
           console.log(location);
           locationDiv.classList.add("bg-danger");
           locationDiv.classList.add("text-dark");
