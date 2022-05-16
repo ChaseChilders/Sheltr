@@ -136,7 +136,7 @@ header a:hover {
 
 .aboutContainer p {
   margin: 0;
-
+}
 /* mobile portrait & landscape */
 @media screen and (min-width:320px) and (max-width:480px){
 .content-container{
@@ -180,7 +180,6 @@ margin-top:30px;
 .shelter-data{
   display:flex;
   justify-content: center;
-
   height:30em;
   width:100%;
 }
@@ -190,6 +189,16 @@ margin-top:30px;
   margin-right:20px;
   width:90%;
   height:40%;
+}
+header{
+  margin-right:0 auto;
+  padding:0px;
+  position:absolute;
+}
+.aboutContainer{
+  margin:0;
+  margin-right: 20px;
+  margin-left:20px;
 }
 }
 
@@ -224,6 +233,11 @@ margin-top:30px;
     flex-direction: column;
     width:100%;
     height:100%;
-  
+  }
+  .aboutContainer{
+    margin:0;
+    padding:70px;
+    margin-right: 20px;
+    margin-left: 20px;
   }
 }
