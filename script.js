@@ -49,54 +49,56 @@ const cityCenters = {
   la: {
     lat: 34.0522,
     lng: -118.2437,
-  }
-}
+  },
+};
 
 //https://cloud.google.com/blog/products/maps-platform/how-calculate-distances-map-maps-javascript-api
 
 function getDistance(pos1, pos2) {
-  const meters = google.maps.geometry.spherical.computeDistanceBetween(pos1, pos2)
-  const miles = meters / 1609.344
-  console.log(miles)
-  return miles
-
+  const meters = google.maps.geometry.spherical.computeDistanceBetween(
+    pos1,
+    pos2
+  );
+  const miles = meters / 1609.344;
+  console.log(miles);
+  return miles;
 }
 
 selectCity.addEventListener("change", (e) => {
-  let selection = e.target.value
+  let selection = e.target.value;
   if (selection == "current") {
     const successCallback = (position) => {
-      let userLat = position.coords.latitude
-      let userLng = position.coords.longitude
+      let userLat = position.coords.latitude;
+      let userLng = position.coords.longitude;
       let userLocation = {
-        location : {
-        lat : userLat,
-        lng: userLng,
-        }
-      }
+        location: {
+          lat: userLat,
+          lng: userLng,
+        },
+      };
       if (getDistance(userLocation.location, cityCenters.baltimore) < 25) {
-        updateLocations("baltimore")
+        updateLocations("baltimore");
       } else if (getDistance(userLocation.location, cityCenters.la) < 25) {
-        updateLocations("los-angeles")
+        updateLocations("los-angeles");
       } else if (getDistance(userLocation.location, cityCenters.dc) < 25) {
-        updateLocations("district-of-columbia")
+        updateLocations("district-of-columbia");
       } else {
-        map.setCenter(userLocation.location)
-        map.setZoom(7)
-        alert('Sorry, no shelters in your area.')
+        map.setCenter(userLocation.location);
+        map.setZoom(7);
+        alert("Sorry, no shelters in your area.");
       }
-      renderPin(userLocation)
-    }
+      renderPin(userLocation);
+    };
 
     const errorCallback = (error) => {
-      console.log(error)
-    }
+      console.log(error);
+    };
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    return
+    return;
   }
-  updateLocations(selection)
-})
-function updateLocations (selection) {
+  updateLocations(selection);
+});
+function updateLocations(selection) {
   document.querySelector(".shelter-list").innerHTML = " ";
   fetch(urls[selection])
     .then((res) => res.json())
@@ -138,8 +140,7 @@ function updateLocations (selection) {
       }
       centerMap(markers);
     });
-};
-
+}
 
 function transformLaData(results) {
   return results.map((result) => {
@@ -232,8 +233,3 @@ function renderPin(location) {
     map: map,
   });
 }
-
-
-
-
-
