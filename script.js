@@ -59,54 +59,56 @@ const cityCenters = {
   la: {
     lat: 34.0522,
     lng: -118.2437,
-  }
-}
+  },
+};
 
 //https://cloud.google.com/blog/products/maps-platform/how-calculate-distances-map-maps-javascript-api
 
 function getDistance(pos1, pos2) {
-  const meters = google.maps.geometry.spherical.computeDistanceBetween(pos1, pos2)
-  const miles = meters / 1609.344
-  console.log(miles)
-  return miles
-
+  const meters = google.maps.geometry.spherical.computeDistanceBetween(
+    pos1,
+    pos2
+  );
+  const miles = meters / 1609.344;
+  console.log(miles);
+  return miles;
 }
 
 selectCity.addEventListener("change", (e) => {
-  let selection = e.target.value
+  let selection = e.target.value;
   if (selection == "current") {
     const successCallback = (position) => {
-      let userLat = position.coords.latitude
-      let userLng = position.coords.longitude
+      let userLat = position.coords.latitude;
+      let userLng = position.coords.longitude;
       let userLocation = {
-        location : {
-        lat : userLat,
-        lng: userLng,
-        }
-      }
+        location: {
+          lat: userLat,
+          lng: userLng,
+        },
+      };
       if (getDistance(userLocation.location, cityCenters.baltimore) < 25) {
-        updateLocations("baltimore")
+        updateLocations("baltimore");
       } else if (getDistance(userLocation.location, cityCenters.la) < 25) {
-        updateLocations("los-angeles")
+        updateLocations("los-angeles");
       } else if (getDistance(userLocation.location, cityCenters.dc) < 25) {
-        updateLocations("district-of-columbia")
+        updateLocations("district-of-columbia");
       } else {
-        map.setCenter(userLocation.location)
-        map.setZoom(7)
-        alert('Sorry, no shelters in your area.')
+        map.setCenter(userLocation.location);
+        map.setZoom(7);
+        alert("Sorry, no shelters in your area.");
       }
-      renderPin(userLocation)
-    }
+      renderPin(userLocation);
+    };
 
     const errorCallback = (error) => {
-      console.log(error)
-    }
+      console.log(error);
+    };
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    return
+    return;
   }
-  updateLocations(selection)
-})
-function updateLocations (selection) {
+  updateLocations(selection);
+});
+function updateLocations(selection) {
   document.querySelector(".shelter-list").innerHTML = " ";
   fetch(urls[selection])
     .then((res) => res.json())
@@ -161,38 +163,7 @@ function updateLocations (selection) {
       }
       centerMap(latLngs);
     });
-};
-
-
-// selectCity.addEventListener("change", (e) => {
-//   if (e.target.value == "baltimore") {
-//     document.querySelector(".shelter-list").innerHTML = " ";
-//     fetch(
-//       "https://opendata.baltimorecity.gov/egis/rest/services/Hosted/Homeless_Shelter/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
-//     )
-//       .then((res) => res.json())
-//       .then((data) => {
-//         console.log(data)
-//         const btInfo = data.features;
-//         for (let i of btInfo) {
-//           const list = document.querySelector(".shelter-list");
-//           const name = i.attributes.name;
-//           const location = `${i.attributes.address}, ${i.attributes.city}, ${i.attributes.state}, ${i.attributes.zipcode}`;
-//           const type = i.attributes.subtype;
-//           const sex = i.attributes.pop_type;
-//           html = `
-//         <div class="name" style="font-size: 20px">${name}</div>
-//         <div class="address" style="font-size: 14px">${location}</div>
-//         <div class="other" style="font-size: 12px">${sex} · ${type}</div>
-//         `;
-//           let list2 = document.createElement("div");
-//           list2.classList.add("list-item");
-//           list2.innerHTML = html;
-//           list.append(list2);
-//         }
-//       });
-//   }
-// });
+}
 
 function transformLaData(results) {
   return results.map((result) => {
@@ -286,7 +257,9 @@ function renderPin(location) {
     icon: markerUrl,
   });
 }
+zoom-on-click-and-icons
 
 
 
 
+main
