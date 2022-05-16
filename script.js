@@ -1,3 +1,6 @@
+const markerUrl = "marker3.png"
+const highlightedMarkerUrl = "marker3.png"
+
 function initMap() {
   // The map, centered at DC
   const map = new google.maps.Map(document.getElementById("map"), {
@@ -25,6 +28,13 @@ function centerMap(locations) {
   //now fit the map to the newly inclusive bounds
   map.fitBounds(bounds);
 }
+
+function zoomTo(location) {
+  map.setCenter(location);
+  map.setZoom(18);
+}
+
+
 
 // EVENT LISTENERS FOR DATA CARDS:
 const selectCity = document.querySelector(".cities");
@@ -109,34 +119,47 @@ function updateLocations (selection) {
       } else if (selection == "baltimore") {
         locations = transformBaData(data.features);
       }
+      let latLngs = [];
       let markers = [];
       for (let location of locations) {
         if (!location.location.lat) continue;
         if (location.id == 62682) continue;
         const locationDiv = renderLocation(location);
         const marker = renderPin(location);
-        markers.push(location.location);
+        markers.push(marker)
+        latLngs.push(location.location);
+        locationDiv.addEventListener("click", (e) => {
+          const highlightedData = document.querySelectorAll(".list-item");
+          for (let i of highlightedData) {
+            i.classList.remove("bg-danger", "text-dark", "bg-opacity-25", "p-3", "rounded", "shadow-lg");
+          }
+          locationDiv.classList.add("bg-danger", "text-dark", "bg-opacity-25", "p-3", "rounded", "shadow-lg");
+          locationDiv.scrollIntoView({ behavior: "smooth" });
+          zoomTo(location.location);
+          for (let m of markers) {
+            m.setIcon(markerUrl)
+            m.setAnimation(null);
+          }
+          marker.setIcon(highlightedMarkerUrl)
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        })
         marker.addListener("click", (e) => {
           const highlightedData = document.querySelectorAll(".list-item");
           for (let i of highlightedData) {
-            i.classList.remove("bg-danger");
-            i.classList.remove("text-dark");
-            i.classList.remove("bg-opacity-25");
-            i.classList.remove("p-3");
-            i.classList.remove("rounded");
-            i.classList.remove("shadow-lg");
+            i.classList.remove("bg-danger", "text-dark", "bg-opacity-25", "p-3", "rounded", "shadow-lg");
           }
-          console.log(location);
-          locationDiv.classList.add("bg-danger");
-          locationDiv.classList.add("text-dark");
-          locationDiv.classList.add("bg-opacity-25");
-          locationDiv.classList.add("p-3");
-          locationDiv.classList.add("rounded");
-          locationDiv.classList.add("shadow-lg");
+          locationDiv.classList.add("bg-danger", "text-dark", "bg-opacity-25", "p-3", "rounded", "shadow-lg");
           locationDiv.scrollIntoView({ behavior: "smooth" });
+          zoomTo(location.location);
+          for (let m of markers) {
+            m.setIcon(markerUrl)
+            m.setAnimation(null);
+          }
+          marker.setIcon(highlightedMarkerUrl);
+          marker.setAnimation(google.maps.Animation.BOUNCE);
         });
       }
-      centerMap(markers);
+      centerMap(latLngs);
     });
 };
 
@@ -260,9 +283,9 @@ function renderPin(location) {
   return new google.maps.Marker({
     position: location.location,
     map: map,
+    icon: markerUrl,
   });
 }
-
 
 
 
