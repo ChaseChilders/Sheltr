@@ -107,6 +107,7 @@ header a:hover {
   margin: 5%;
   flex-wrap: wrap;
   font-family: "Quicksand", sans-serif;
+  cursor: pointer;
 }
 
 .dropdown {
